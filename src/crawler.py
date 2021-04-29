@@ -1,14 +1,12 @@
 #!/usr/bin/python3
 
-
-# pip install --user requests beautifulsoup4
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin, urldefrag
 import sys
 
 
-def crawl(url):
+def crawl(url, depth, maxDepth, visited):
     """
     Given an absolute URL, print each hyperlink found within the document.
 
@@ -22,13 +20,16 @@ def crawl(url):
     assignment.
     """
 
-    print("\tTODO: Check the current depth of recursion; return now if you have gone too deep")
     try:
-        print("\tTODO: Print this URL with indentation indicating the current depth of recursion")
+        visited.add(url)
+        if depth > int(maxDepth):
+            return
+        else:
+            print(depth * "    " + str(url))
         response = requests.get(url)
         if not response.ok:
-            print(f"crawl({url}): {r.status_code} {r.reason}")
-            return 
+            print(f"crawl({url}): {response.status_code} {response.reason}")
+            return
 
         html = BeautifulSoup(response.text, 'html.parser')
         links = html.find_all('a')
@@ -37,39 +38,54 @@ def crawl(url):
             if link:
                 # Create an absolute address from a (possibly) relative URL
                 absoluteURL = urljoin(url, link)
-                
                 # Only deal with resources accessible over HTTP or HTTPS
                 if absoluteURL.startswith('http'):
-                    print(absoluteURL)
+                    if "#" in absoluteURL:
+                        absoluteURL, frag = urldefrag(url)
 
-        print("\n\tTODO: Don't just print URLs found in this document, visit them!")
-        print("\tTODO: Trim fragments ('#' to the end) from URLs")
-        print("\tTODO: Use a `set` data structure to keep track of URLs you've already visited")
-        print("\tTODO: Call crawl() on unvisited URLs")
+                    r = response.status_code == 404
+                    k = response.status_code == 401
+                    if r:
+                        print("Bad link unable to join, ERROR 404")
+                        visited.add(absoluteURL)
+                    if k:
+                        print("Do not have correct permissions to join page, ERROR 401")
+
+                    if absoluteURL in visited:
+                        print("\n" + depth * "    " + absoluteURL)
+                        visited.add(absoluteURL)
+                    else:
+                        crawl(absoluteURL, depth + 1, maxDepth, visited)
 
     except Exception as e:
         print(f"crawl(): {e}")
-    return
+    except ConnectionError as r:
+        print(f"{r}")
+    except PermissionError as k:
+        print(f"{k}")
+# An absolute URL is required to begin
 
 
-## An absolute URL is required to begin
 if len(sys.argv) < 2:
     print("Error: no Absolute URL supplied")
     sys.exit(1)
 else:
     url = sys.argv[1]
 
-print("\tTODO: determine whether variable `url` contains an absolute URL")
+parsed = urlparse(url)
+if "http" not in url:
+    print("This is not an exact url please enter \" http:// \" or \" https://\" ")
+    sys.exit(1)
 
-print("\tTODO: allow the user to optionally override the default recursion depth of 3")
 maxDepth = 3
+if len(sys.argv) <= 2:
+    maxDepth = 3
+else:
+    maxDepth = sys.argv[2]
 
 plural = 's'
 if maxDepth == 1:
     plural = ''
 
-print(f"Crawling from {url} to a maximum depth of {maxDepth} link{plural}")
-print("\tTODO: crawl() keeps track of the max depth itself: no globals allowed!")
-crawl(url)
-
-print("\tTODO: delete each TODO message as you fulfill it")
+print(f"\nCrawling from {url} to a maximum depth of {maxDepth} link{plural}")
+crawl(url, depth=0, maxDepth=maxDepth, visited=set(()))

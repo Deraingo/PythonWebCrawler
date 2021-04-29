@@ -3,77 +3,156 @@
 *Adapted from https://htdp.org/2020-5-6/Book/part_preface.html*
 
 # 0.  From Problem Analysis to Data Definitions
+**<center>need to make a web crawler that visits websites and keeps track of each url that is visited**</center>  
 
-**Problem Analysis is the process of understanding the problem the software
-will address and to document in detail what the software system needs to do.
-In the real world this phase demands close interaction between developers and
-the client.  Ideally, end-users of the system are interviewed for their input.**
+##<center>The Crawler should</center>
+*  start at a given url  
+* Given the ammount of times to recurse the program will follow links up to the amount its given.
+*   it will also keep following links until it reaches a link its already visited before.   
+*  in which case it will stop.   
+*  indentation used to determine the level of recursion that you are on.
+*  once you hit the max recursion limit you have set it will keep running  
+*  if there are more links but it wont click on any of them  
 
-**In this course you will receive detailed requirements in the form of the
-assignment description.  I stand-in for the client and end-users when you have
-questions concerning their needs and desires.**
+it will instead just print the links under the same indentation until it has found all links fo that page.
+   
+afterward it will comeback a level and start printing for that level, then back a level and so on....   
 
-**In this phase of the design process you should use [The Feynman
-Technique](https://www.youtube.com/watch?v=tkm0TNFzIeg) To ensure that you
-understand what is being asked of you.**
+If the program has an error maybe it hits a bad link or something   
+instead of crashing it will continue to run using exception handling to keep moving.
 
-**The output of this phase of the development process is a restatement of the
-requirements in your own words.  Putting new problems into your own words will
-help you identify your "Known knowns" and your "known unknowns".**
+`depth:` will show the current depth of recursion you are currently on, this will be used in order to set the indentation of the program.  
 
-**As part of your restatement of the problem identify information that must be
-represented and decide how to represent in the chosen programming language.**
+`max depth: `is the maximum depth that the user sets (set to 3 by default) and this is where the program will stop recursing and start only printing links on the pages its been too.   
 
-**Formulate data definitions and illustrate them with examples.**
+`Visited:` Visited: will display the links we've visited and will keep track of these links so that the crawler doesnt revisit them
+ - If there is a "bad link" hard code these in to the Visited variable to that you dont visit these links after testing.  
 
+`Crawl:` should be set at a default value of 0, meaning the starting point is 0.  
+  - each time crawl is called `if (depth < maxDepth){ return crawl; }`   
+  - `else{ print url; }`  
+set indentation factor for each level of recursion.  
+    - indent from each indentation. i.e 
+  ```
+  link0
+    link1
+      link2
+        link3 -- stop 
+        link
+        link
+        link
+        link
+      link
+      link
+      link
+      link
+    link
+    link
+    link
+    link
+    etc...    
+```
+use requests library to fetch webpages by url.   
+look at anchor tags,   
+if a href value is embedded in the anchor tag throw out the url indecated  
+(these are just used to bring you to a different part of the page).  
 
+- Remove the fragment section of the url if there is one.  
+  
+(fragments are indecated by their hash symbol usually followed by some phrase `#verryCoolKanye`)
 # 1.  System Analysis
+* give default values to `crawl`
+```
+crawl(url, depth, maxDepth, visited) 
+```
 
-**Analyze the flow of data throughout the program.  Does the program get input
-from the user?  If so, does it come from interactive prompts or from
-command-line arguments?  Is data incorporated from a file on the disk, from a
-database or from the internet?**
+* make sure the address provided is an absolute  
+`if http / https is not in the adress then it is not an absolute adress `  
+  
 
-**How is output given?  On the screen in the form of text or graphics?  Are
-output files created, and what form do they take?**
+* need a way to indent each iteration  
+`depth * "    " + url` will get a recursive indentation 
+  
 
-**Identify the non-trivial formulas you need to create.  If there aren't any then
-state "no formulas" in this section.**
+* need a recursive way to visit the websites  
+`call crawl on absoluteURL and increase depth while calling visited and max depth in order to do recursive checks`
+  
+* add visited link to a set data type so they wont be revisited.   
 
-**State what kind of data each desired function consumes and produces.  Formulate
-a concise description of what the function computes.  Define a stub that lives
-up to the signature.**
+
+* what to do once we hit our recursion limit  
+`print links from each page starting from end call backward.`  
+  if we hit a bad link, throw an exception add it to visited then keep crawling   
+  
+  
+
+
 
 
 # 2.  Functional Examples
+**<center>Get max recursion</center>**
+```
+if depth > (maxDepth)
+    return
+```
 
-**Design a process for obtaining the output from the input.  Consider both *good*
-and *bad* inputs.  Find or create examples of both kinds of input.**
+**<center>Setting indentation for recursion</center>**
+```
+print(depth * "    " + url
+```
+**<center>getting responses</center>**
+```
+response = reqests.get(url)
+call crawl on the absolute url to join the page. 
+```
+**<center>Parsing urls</center>**
+```
+getting rid of the fragments ->  urldefrag(url) 
+urljoin(url, link) link =  path,  url = scheme & location
+```
+**<center> Exception Handeling </center>**
+```
+get error if page does not exist  - error 404 
+get error if do not have permissions to join page  - error 401
+```
 
-**Work out problem examples on paper, on a whiteboard or some other medium that
-is *not* your computer.  It is a mistake to begin writing executable code
-before you thoroughly understand what form the algorithm(s) must take.**
 
-**Instead, describe components of the system in *"pseudocode"*.  Expect to make
-lots of mistakes at this point.  You will find that it is much easier to throw
-away pseudocode than real code.**
-
-**Manually work through several examples that illustrate the program's overall
-purpose, as well as the purpose of each component of the finished system.  You
-will converge on a correct solution much faster if you feel comfortable making
-mistakes as you go.**
-
-**This phase involves the use of many levels of abstraction to decompose the
-problem into manageable components, and design strategies for implementing each
-component.  Components may be functions, modules or classes.**
 
 
 # 3.  Function Template
 
-**Combine the function stubs written in step #2 with pseudocode from step #3.
-Comment out the pseudocode, leaving a valid program that compiles/runs without
-errors.  At this stage your program doesn't quite work, but it also doesn't
-crash.**
+```python
+try: 
+    visited.add(url)
+if dpeth > int(maxDepth):
+    return
+else: 
+    print(depth * "    " + str(url))
+response = reqeusts.get(url)
+
+
+if absoluteURL.startswith('http'):
+    if '#' in absoluteURL:
+        absoluteURL, frag = urldefrag(url)
+    r = response.status_code == 404
+    k = response.status_code == 401
+    if r:
+        print("Bad link unable to join, ERROR 404")
+        visited.add(absoluteURL)
+    if k:
+        print("Do not have correct permissions to join page, ERROR 401")
+    
+    if absoluteURL in visited:
+        print(depth * "    " + absoluteURL)
+        visited.add(absoluteURL)
+    else:
+        crawl(absoluteURL, depth + 1, maxDepth, visited)
+
+except ConnectionError as r:
+    print(f"{r}")
+except PermissionError as k:
+    print(f"{k}")
+```
 
 
 # 4.  Implementation
