@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+#!/usr/bin/python3
+
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin, urldefrag
@@ -44,18 +46,21 @@ def crawl(url, depth, maxDepth, visited):
                         absoluteURL, frag = urldefrag(url)
 
                     r = response.status_code == 404
-                    k = response.status_code == 401
+                    for r in range(response.status_code):
+                        r = response.status_code == 401
                     if r:
-                        print("Bad link unable to join, ERROR 404")
+                        print("Bad link", r)
                         visited.add(absoluteURL)
-                    if k:
-                        print("Do not have correct permissions to join page, ERROR 401")
 
                     if absoluteURL in visited:
                         print("\n" + depth * "    " + absoluteURL)
                         visited.add(absoluteURL)
+                        with open(sys.argv[3] + ".csv", "w") as file:
+                            file.write(absoluteURL + "," + depth)
+                        file.close()
                     else:
                         crawl(absoluteURL, depth + 1, maxDepth, visited)
+
 
     except Exception as e:
         print(f"crawl(): {e}")
@@ -89,3 +94,4 @@ if maxDepth == 1:
 
 print(f"\nCrawling from {url} to a maximum depth of {maxDepth} link{plural}")
 crawl(url, depth=0, maxDepth=maxDepth, visited=set(()))
+

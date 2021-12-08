@@ -155,42 +155,8 @@ except PermissionError as k:
 ```
 
 
-# 4.  Implementation
-
-**This is the only part of the process focused on writing code in your chosen
-programming language.**
-
-**One by one translate passages of pseudocode into valid code.  Fill in the gaps
-in the function template.  Exploit the purpose statement and the examples.**
-
-**If you were thorough in the previous steps and are familiar with your
-programming system this part will go by very quickly and the code will write
-itself.**
-
-**When you are learning a new programming language or an unfamiliar library this
-phase can be slow and difficult.  As you gain experience with the relevant
-technologies you will spend less and less time in this phase of the process.**
-
-
-# 5.  Testing
-
-**Articulate the examples given in step #2 as tests and ensure that each
-function passes all of its tests.  Doing so discovers mistakes.  Tests also
-supplement examples in that they help others read and understand the definition
-when the need arises—and it will arise for any serious program.**
-
-**As bugs are discovered and fixed, devise new test cases that will detect these
-problems should they return.**
-
-**If you didn't come across any bugs (lucky you!) think of a possible flaw and a
-test that can be employed to screen for it.**
-
-**At a minimum you should create a document explaining step-by-step how a
-non-technical user may manually test your program to satisfy themselves that it
-operates correctly.  Explain the entire process starting how to launch the
-program, what inputs they should give and what results they should see at every
-step.  Provide test cases of good and bad inputs to catch both false positives
-and false negatives.  Any deviation from the expected outputs are errors.**
-
-**The ideal is to write an automated test to avoid all manual labor beyond
-launching the test.**
+##Some "Extras" to add
+I decided something that would be useful would be to send all links to a csv file upon the crawler finishing its task.  
+That way the user can go back and view the links they have visited.  
+This should be relatively easy as I just need to send the info to the file  
+`file1 = open("urls.csv", "w")` 
