@@ -1,7 +1,4 @@
 #!/usr/bin/python3
-
-#!/usr/bin/python3
-
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin, urldefrag
@@ -22,6 +19,10 @@ def crawl(url, depth, maxDepth, visited):
     assignment.
     """
 
+    if len(sys.argv) >= 3:
+        file = open(str(sys.argv[3:]) + ".csv", "w")
+    else:
+        file = open("links.csv", "w")
     try:
         visited.add(url)
         if depth > int(maxDepth):
@@ -35,6 +36,7 @@ def crawl(url, depth, maxDepth, visited):
 
         html = BeautifulSoup(response.text, 'html.parser')
         links = html.find_all('a')
+
         for a in links:
             link = a.get('href')
             if link:
@@ -46,20 +48,23 @@ def crawl(url, depth, maxDepth, visited):
                         absoluteURL, frag = urldefrag(url)
 
                     r = response.status_code == 404
-                    for r in range(response.status_code):
-                        r = response.status_code == 401
+                    k = response.status_code == 403
+
                     if r:
                         print("Bad link", r)
+                        visited.add(absoluteURL)
+                    if k:
+                        print("No permissions", r)
                         visited.add(absoluteURL)
 
                     if absoluteURL in visited:
                         print("\n" + depth * "    " + absoluteURL)
-                        visited.add(absoluteURL)
-                        with open(sys.argv[3] + ".csv", "w") as file:
-                            file.write(absoluteURL + "," + depth)
-                        file.close()
+                        file.write(absoluteURL + ", " + str(depth) + "\n")
+
                     else:
                         crawl(absoluteURL, depth + 1, maxDepth, visited)
+        file.close()
+
 
 
     except Exception as e:
