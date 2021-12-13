@@ -10,3 +10,5 @@
 | December 7  | got crawl to work with links, indentation is broken, still having issues with fragments
 | December 8  | got fragments to go away, got indentation to work properly, got links to print properly I hope, **READY TO SUBMIT**
 | December 9  | Decided to try and print links to either a csv or a txt file as the program runs|
+| December 10 | Got .csv loader to work
+| December 12 | Made manual, ready to submit| 
