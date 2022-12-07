@@ -1,35 +1,13 @@
-# CS 1440 Assignment 5: Recursive Web Crawler
+# Python Recursive Web Crawler
 
-* [Instructions](instructions/README.md)
-* [Rubric](instructions/Rubric.md)
-* [Hints](instructions/Hints.md)
-* [Sample output](instructions/Output.md)
+* [Manual](doc/Manual.md)
+* [Plan and Updates](doc/Plan.md)
+
 
 
 ## Overview
 
-Pleased with the success of your fractal visualizer, your client recommended
-DuckieCorp to a friend who is conducting research into the structure of the
-World Wide Web (something to do with Russians and fake news, sounds like a scam
-if you ask me!).  Given the time constraints we must work under, it seems
-prudent to leverage existing solutions instead of re-inventing the wheel.
-
-Your task is to use software libraries to write a recursive web crawler which,
-given a starting URL, will visit all web pages reachable from that page, then
-visit all pages reachable from those pages, etc., up to a specified maximum
-depth.  Once a URL has been visited it must *NOT* be re-visited.  Due to the
-World Wide Web's structure as an undirected graph of hyperlinks, a recursive
-algorithm is the natural choice to traverse it.
-
-
-## Objectives
-
-*   Use recursion to solve a real-world problem
-    *   Identify base cases
-    *   Avoid infinite recursion
-*   Leverage software libraries instead of re-inventing wheels
-    -   urllib
-    -   Requests
-    -   BeautifulSoup
-*   Understand how URLs are constructed
-*   Create robust software by handling exceptions instead of crashing
+The following project was an old assignment from my Methods In Computer Science class back in 2020.  
+I decided to continue to work on it and update it hopefully turning it into a useful utility later on.  
+The project is pretty simple I use Beatiful Soup and urlibparse to recursively follow available links and save them to a `.csv` file.  
+I plan to allow the user to "grep" in a sense later on almost like google, searching through the link specified in the command line for specific words or phrases.
